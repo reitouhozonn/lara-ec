@@ -27,3 +27,7 @@ Route::get('/item/{item}', [ItemController::class, 'show']);
 
 Route::post('/cart', [CartController::class, 'store']);
 Route::get('/cartitem', [CartController::class, 'index']);
+Route::delete('/cartitem/{cartitem}', [CartController::class, 'destroy']);
+Route::put('/cartitem/{cartitem}', [CartController::class, 'update']);
+
+Route::post('/cartitem', [CartController::class, 'sendMail']);

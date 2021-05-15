@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @if(Session::has('flash_message'))
+        <div class="alert alert-success">
+            {{ session('flash_message') }}
+        </div>
+    @endif
+        
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -13,10 +20,22 @@
                             <div>
                                 {{ $cartitem->amount }}円
                             </div>
-                            <div>
-                                {{ $cartitem->quantity }}個
-                            </div>
+                        <div class="form-inline">
+
+                            <form method="POST" action="/cartitem/{{ $cartitem->id }}">
+                                @method('PUT')
+                                @csrf
+                                <input type="text" name="quantity" class="form-control" value="{{ $cartitem->quantity }}">
+                                個
+                                <button class="btn btn-primary" type="submit">更新</button>
+                            </form>
+                            <form method="POST" action="/cartitem/{{ $cartitem->id }}">
+                                @method('delete')
+                                @csrf
+                                <button class="btn btn-primary ml-1" type="submit">カートから削除</button>
+                            </form>
                         </div>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -27,6 +46,12 @@
                     </div>
                     <div class="card-body">
                         {{ $subtotal }}円
+                    </div>
+                    <div class="form-inline">
+                        <form method="POST" action="/cartitem">
+                            @csrf
+                            <button type="submit" class="btn btn-primary" name="post">買う</button>
+                        </form>
                     </div>
                 </div>
             </div>

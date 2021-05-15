@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Buy;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
@@ -91,9 +93,12 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cart $cart)
+    public function update(Request $request, CartItem $cartitem)
     {
-        //
+        $cartitem->quantity = $request->post('quantity');
+        $cartitem->save();
+
+        return redirect('cartitem')->with('flash_massage', 'カートを更新しました');
     }
 
     /**
@@ -102,8 +107,20 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart)
+    public function destroy(CartItem $cartitem)
     {
-        //
+        $cartitem->delete();
+
+        return redirect('cartitem')->with('flash_massage', 'カートから削除しました');
+    }
+
+    public function sendMail(Request $request, CartItem $cartItem)
+    {
+        Mail::to(Auth::user()->email)->send(new Buy());
+        CartItem::where('user_id', Auth::id())->delete();
+        // return view('cartitem');
+
+        $request->flash();
+        return redirect('cartitem')->with('flash_massage', '購入しました');
     }
 }
