@@ -12,9 +12,13 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::all();
+        if ($request->has('keyword')) {
+            $items = Item::where('name', 'like', '%' . $request->get('keyword') . '%')->paginate('15');
+        } else {
+            $items = Item::paginate(15);
+        }
 
         return view('item/index', [
             'items' => $items
@@ -48,9 +52,11 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Item $item)
     {
-        //
+        return view('item/show', [
+            'item' => $item,
+        ]);
     }
 
     /**

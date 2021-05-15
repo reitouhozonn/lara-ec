@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,8 @@ Route::get('/dashboard', function () {
 
 require __DIR__ . '/auth.php';
 
-Route::get('/', [ItemController::class, 'index']);
+Route::get('/', [ItemController::class, 'index'])->name('/');
+Route::get('/item/{item}', [ItemController::class, 'show']);
+
+Route::post('/cart', [CartController::class, 'store']);
+Route::get('/cartitem', [CartController::class, 'index']);
