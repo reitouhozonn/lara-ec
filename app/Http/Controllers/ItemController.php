@@ -20,8 +20,12 @@ class ItemController extends Controller
             $items = Item::paginate(15);
         }
 
+        $ip = $request->ip();
+
+
         return view('item/index', [
-            'items' => $items
+            'items' => $items,
+            'ip' => $ip,
         ]);
     }
 
